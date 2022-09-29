@@ -1,5 +1,5 @@
 import torch
-
+import os
 
 def book_ch2_1():
     x = torch.arange(12)
@@ -26,6 +26,10 @@ def book_ch2_1():
 
     print('逻辑张量')
     print(x==y)
+    print(x)
+    print(y)
+    print(x>y)
+    print(x<y)
 
     print('张量元素求和')
     print(x.sum())
@@ -44,9 +48,15 @@ def book_ch2_1():
     print(x)
     x[0:2,:] = 12
     print(x)
+    print(y)
 
     print('2.1.5 节省内存')
-    
+
+def book_ch2_2():
+    #创建目录，存储CSV文件，如果目录不存在，则创建
+    os.makedirs(os.path.join('/opt/data/dive_into_deep_learning', 'data'), exist_ok = True)
+    data_file = os.path.
+
 def main():
     print("Hello World!")
 
