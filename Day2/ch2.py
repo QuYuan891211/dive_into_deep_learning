@@ -89,6 +89,33 @@ def book_ch2_2():
     print(tensor2)
     data_result = torch.cat((tensor1,tensor2),dim = 1)
     print(data_result)
+def book_ch2_3():
+    #线性代数
+    x = torch.tensor(3.0)
+    y = torch.tensor(2.0)
+    print('2.3.1 标量')
+    print(x+y,x-y,x*y,x/y)
+    print('2.3.2 向量')
+    x = torch.arange(4)
+    print(x)
+    print(x[3])
+    print('长度为： ' + str(len(x)))
+    print('形状为： ' + str(x.shape))
+    print('2.3.3 矩阵')
+    x = torch.arange(20).reshape(5,4)
+    print(x)
+    b = torch.tensor([[1,2,3],[2,0,5],[3,5,2]])
+
+    print(b == b.T)
+
+    print('2.3.5 张量')
+    A = torch.arange(20,dtype=torch.float32).reshape(5,4)
+    B = A.clone()
+    print(A)
+    print(A+B)
+    print('Hadamard积： ' + str(A*B))
+
+    
 def main():
     print("Hello World!")
 
@@ -96,4 +123,5 @@ def main():
 if __name__ == "__main__":
     main()
     #book_ch2_1()
-    book_ch2_2()
+    #book_ch2_2()
+    book_ch2_3()
