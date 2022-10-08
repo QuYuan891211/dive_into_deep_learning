@@ -1,6 +1,7 @@
 import torch
 import os
 import pandas as pd
+
 def book_ch2_1():
     x = torch.arange(12)
     print('2.1.1 获取一个张量（vector）')
@@ -115,7 +116,20 @@ def book_ch2_3():
     print(A+B)
     print('Hadamard积： ' + str(A*B))
 
-    
+    x = torch.arange(4, dtype=torch.float32)
+    print(x.sum())
+    print(x.sum(axis=0))
+
+    print('2.3.7 点积')
+    y = torch.ones(4,dtype=torch.float32)
+    x = torch.arange(4,dtype=torch.float32)
+    print('点积： ' + str(torch.dot(x,y)))
+
+    u = torch.tensor(([3.0,-4.0]))
+    print('范数' + str(torch.norm(u)))
+
+
+
 def main():
     print("Hello World!")
 
