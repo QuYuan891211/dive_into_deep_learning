@@ -33,6 +33,18 @@ def book_ch2_5():
     y.sum().backward()
     print(x.grad)
 
+def f(a):
+    print('2.5.4 Python控制流的梯度计算')
+    b = a*2
+    while b.norm() < 1000:
+        b = b*2
+    if b.sum() > 0:
+        c = b
+    else:
+        c = 100 * b
+    return c
+
+
 
 
 
@@ -45,3 +57,7 @@ if __name__ == "__main__":
     #book_ch2_1()
     #book_ch2_2()
     book_ch2_5()
+    a = torch.randn(size = (), requires_grad=True)
+    d = f(a)
+    d.backward()
+    print(a.grad)

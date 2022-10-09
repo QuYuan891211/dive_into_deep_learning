@@ -53,6 +53,8 @@ def book_ch2_1():
     # [TODO]-2.1.5,2.1.6
     print('2.1.5 节省内存')
 
+
+
 def book_ch2_2():
     print('2.2.1 数据预处理')
     #创建目录，存储CSV文件，如果目录不存在，则创建
@@ -136,6 +138,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-    #book_ch2_1()
+    book_ch2_1()
     #book_ch2_2()
-    book_ch2_3()
+    #book_ch2_3()
