@@ -50,20 +50,45 @@ def ch3_2_3():
     b = torch.zeros(1, requires_grad=True)
     print('w：', w)
     print('b: ', b)
+    return w,b
 
-def linreg(X, w, b): #@save
-    print('定义线性回归模型')
-    return torch.matmul(X,w) + b
+def linreg(X, w, b):  # @save
+    # print('定义线性回归模型')
+    return torch.matmul(X, w) + b
+
 
 def squared_loss(y_hat, y):
-    print('SE')
-    return (y_hat - y.reshape(y_hat.shape))**2/2
+    # print('SE')
+    return (y_hat - y.reshape(y_hat.shape)) ** 2 / 2
 
-def sgd(params, lr, batch_size): #@save
+
+def sgd(params, lr, batch_size):  # @save
     with torch.no_grad():
         for param in params:
-            param -=lr * param.grad / batch_size
+            param -= lr * param.grad / batch_size
             param.grad.zero_()
+
+
+def ch3_2_7():
+    print("3.2.7 训练")
+    lr = 0.03
+    num_epochs = 3
+    net = linreg
+    loss = squared_loss
+    batch_size = 10
+    features, labels = ch3_2_1()
+    w,b = ch3_2_3()
+    for epoch in range(num_epochs):
+        for X, y in data_iter(batch_size, features, labels):
+            l = loss(net(X, w, b), y)  # X和y的小批量损失
+            # 因为l形状是(batch_size,1)，而不是一个标量。l中的所有元素被加到一起，
+            # 并以此计算关于[w,b]的梯度
+            l.sum().backward()
+            sgd([w, b], lr, batch_size)  # 使用参数的梯度更新参数
+        with torch.no_grad():
+            train_l = loss(net(features, w, b), labels)
+            print(f'epoch {epoch + 1}, loss {float(train_l.mean()):f}')
+
 
 def main():
     print("ch3_1")
@@ -72,4 +97,4 @@ def main():
 if __name__ == "__main__":
     main()
     # ch2_7_1()
-    ch3_2_2()
+    ch3_2_7()
