@@ -4,8 +4,6 @@ import numpy as np
 from d2l import torch as d2l
 from util.timer import Timer
 from matplotlib import pyplot as plt
-def main():
-    print("ch3_1")
 
 def ch3_1_2():
     print('3.1.2 矢量化加速')
@@ -40,6 +38,11 @@ def ch3_1_3():
              ylabel='p(x)', figsize=(4.5, 2.5),
              legend=[f'mean {mu}, std {sigma}' for mu, sigma in params])
     plt.show()
+
+
+def main():
+    print("ch3_1")
+
 if __name__ == "__main__":
     main()
     #ch2_7_1()
