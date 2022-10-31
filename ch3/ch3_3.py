@@ -5,7 +5,7 @@ from d2l import torch as d2l
 from torch import nn
 
 
-def synthetic_data(true_w,true_b):
+def synthetic_data(true_w, true_b):
     print("3.3.1 生成数据集")
 
     features, labels = d2l.synthetic_data(true_w, true_b, 1000)
@@ -17,7 +17,7 @@ def load_array(data_arrays, batch_size, is_train=True):  # @save
     return data.DataLoader(dataset, batch_size, shuffle=is_train)
 
 
-def read_data(features,labels):
+def read_data(features, labels):
     batch_size = 10
 
     print("3.3.2 读取数据集")
@@ -53,7 +53,7 @@ def train():
     true_b = 4.2
     num_epochs = 3
     features, labels = synthetic_data(true_w, true_b)
-    data_iter = read_data(features,labels)
+    data_iter = read_data(features, labels)
     net = init_model()
     loss = init_loss()
     trainer = init_optim(net)
@@ -70,6 +70,7 @@ def train():
     print('w的估计误差：', true_w - w.reshape(true_w.shape))
     b = net[0].bias.data
     print('b的估计误差：', true_b - b)
+
 
 def main():
     print("ch3_1")
