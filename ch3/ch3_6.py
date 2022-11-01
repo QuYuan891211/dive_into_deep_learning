@@ -1,7 +1,7 @@
 import torch
 from IPython import display
 from d2l import torch as d2l
-
+from matplotlib import pyplot as plt
 class Accumulator:  #@save
     """在n个变量上累加"""
     def __init__(self, n):
@@ -116,28 +116,29 @@ def accuracy(y_hat, y):  # @save
     return float(cmp.type(y.dtype).sum())
 
 # TODO-这里报错： unsupported operand type(s) for +: 'NoneType' and 'tuple'
-def train_epoch_ch3(net, train_iter,loss,updater):
+def train_epoch_ch3(net, train_iter, loss, updater):  #@save
+    """训练模型一个迭代周期（定义见第3章）"""
     # 将模型设置为训练模式
     if isinstance(net, torch.nn.Module):
         net.train()
-        # 训练损失总和、训练准确度总和、样本数
-        metric = Accumulator(3)
-        for X, y in train_iter:
-            # 计算梯度并更新参数
-            y_hat = net(X)
-            l = loss(y_hat, y)
-            if isinstance(updater, torch.optim.Optimizer):
-                # 使用PyTorch内置的优化器和损失函数
-                updater.zero_grad()
-                l.mean().backward()
-                updater.step()
-            else:
-                # 使用定制的优化器和损失函数
-                l.sum().backward()
-                updater(X.shape[0])
-            metric.add(float(l.sum()), accuracy(y_hat, y), y.numel())
-            # 返回训练损失和训练精度
-            return metric[0] / metric[2], metric[1] / metric[2]
+    # 训练损失总和、训练准确度总和、样本数
+    metric = Accumulator(3)
+    for X, y in train_iter:
+        # 计算梯度并更新参数
+        y_hat = net(X)
+        l = loss(y_hat, y)
+        if isinstance(updater, torch.optim.Optimizer):
+            # 使用PyTorch内置的优化器和损失函数
+            updater.zero_grad()
+            l.mean().backward()
+            updater.step()
+        else:
+            # 使用定制的优化器和损失函数
+            l.sum().backward()
+            updater(X.shape[0])
+        metric.add(float(l.sum()), accuracy(y_hat, y), y.numel())
+    # 返回训练损失和训练精度
+    return metric[0] / metric[2], metric[1] / metric[2]
 
 if __name__ == "__main__":
     main()
@@ -160,3 +161,4 @@ if __name__ == "__main__":
     # print(X_prob, X_prob.sum(1))
     num_epochs = 10
     train_ch3(net, train_iter, test_iter, cross_entropy, num_epochs, updater)
+    plt.show()
