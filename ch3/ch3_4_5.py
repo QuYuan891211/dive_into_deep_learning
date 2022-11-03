@@ -4,22 +4,23 @@ from torch.utils import data
 from torchvision import transforms
 from d2l import torch as d2l
 from matplotlib import pyplot as plt
-# import pylab
 
+
+# import pylab
 
 
 def main():
     print("ch3_5")
 
 
-def get_fashion_mnist_labels(labels):  #@save
+def get_fashion_mnist_labels(labels):  # @save
     """返回Fashion-MNIST数据集的文本标签"""
     text_labels = ['t-shirt', 'trouser', 'pullover', 'dress', 'coat',
                    'sandal', 'shirt', 'sneaker', 'bag', 'ankle boot']
     return [text_labels[int(i)] for i in labels]
 
 
-def show_images(imgs, num_rows, num_cols, titles=None, scale=1.5):  #@save
+def show_images(imgs, num_rows, num_cols, titles=None, scale=1.5):  # @save
     """绘制图像列表"""
     figsize = (num_cols * scale, num_rows * scale)
     _, axes = d2l.plt.subplots(num_rows, num_cols, figsize=figsize)
@@ -38,24 +39,28 @@ def show_images(imgs, num_rows, num_cols, titles=None, scale=1.5):  #@save
             ax.set_title(titles[i])
     return axes
 
-def get_dataloader_workers():  #@save
+
+def get_dataloader_workers():  # @save
     """使用4个进程来读取数据"""
     return 4
 
-def load_data_fashion_mnist(batch_size,resize=None): #@save
+
+def load_data_fashion_mnist(batch_size, resize=None):  # @save
     trans = [transforms.ToTensor()]
     if resize:
         trans.insert(0, transforms.Resize(resize))
     trans = transforms.Compose(trans)
     mnist_train = torchvision.datasets.FashionMNIST(
-        root="../data", train=True, transform=trans, download=True)
+        root=r"D:\Fashion-MNIST\data", train=True, transform=trans, download=True)
     mnist_test = torchvision.datasets.FashionMNIST(
-        root="../data", train=False, transform=trans, download=True)
-    #返回两个迭代器
+        root=r"D:\Fashion-MNIST\data", train=False, transform=trans, download=True)
+    # 返回两个迭代器
     return (data.DataLoader(mnist_train, batch_size, shuffle=True,
                             num_workers=get_dataloader_workers()),
             data.DataLoader(mnist_test, batch_size, shuffle=False,
                             num_workers=get_dataloader_workers()))
+
+
 if __name__ == "__main__":
     main()
     d2l.use_svg_display()
