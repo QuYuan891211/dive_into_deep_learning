@@ -19,7 +19,7 @@ def main():
     W2 = nn.Parameter(torch.randn(num_hiddens, num_outputs, requires_grad=True) * 0.01)
     b2 = nn.Parameter(torch.zeros(num_outputs, requires_grad=True))
     params = [W1, b1, W2, b2]
-    updater = torch.optim.SGD(params, lr=lr)
+
 
     # 3. 定义激活函数
     def relu(X):
@@ -34,7 +34,9 @@ def main():
 
     # 5. 定义损失函数
     loss = nn.CrossEntropyLoss(reduction='none')
-    # 6. 训练
+    # 6. 定义优化方法
+    updater = torch.optim.SGD(params, lr=lr)
+    # 7. 训练
     d2l.train_ch3(net, train_iter, test_iter, loss, num_epochs, updater)
     d2l.predict_ch3(net, test_iter)
 
