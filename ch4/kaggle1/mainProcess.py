@@ -6,6 +6,8 @@ from torch import nn
 from d2l import torch as d2l
 from downloadData import download
 
+# 房价预测 https://www.kaggle.com/c/house-prices-advanced-regression-techniques
+
 # 标准化的数据预处理步骤
 def pre_process(all_features):
     # 1 处理数值型的缺失值
@@ -32,6 +34,14 @@ def pre_process(all_features):
     test_features = torch.tensor(all_features[n_train:].values, dtype=torch.float32)
     print(train_features.shape)
     print(test_features.shape)
+
+    # 3.1 拿到最后一列作为标注
+    train_labels = torch.tensor(
+        train_data.SalePrice.values.reshape(-1, 1), dtype=torch.float32)
+
+    print(train_labels.shape)
+
+
 if __name__ == "__main__":
     print("Kaggle实战：房价预测——数据下载")
     # 1. 下载训练集与测试集，下载好之后就注释掉
@@ -39,15 +49,19 @@ if __name__ == "__main__":
     # train_data = pd.read_csv(download('kaggle_house_train'))
     # test_data = pd.read_csv(download('kaggle_house_test'))
 
+    # 数据前处理
     # 1. 下载好之后，读取数据集
     train_data = pd.read_csv("D:\data\kaggle\kaggle_house_pred_train.csv")
     test_data = pd.read_csv("D:\data\kaggle\kaggle_house_pred_test.csv")
     # print(type(train_data))
 
     # 1.1 打印训练集测试集的形状
-    print(train_data.shape)
-    print(test_data.shape)
+    # print(train_data.shape)
+    # print(test_data.shape)
     # 1.2 打印前4个特征与最后的价格
-    print(train_data.iloc[0:4, [0, 1, 2, 3, -3, -2, -1]])
+    # print(train_data.iloc[0:4, [0, 1, 2, 3, -3, -2, -1]])
+    # TODO：此处切掉了不带任何预测信息的ID，以及我们要预测的值那一列
     all_features = pd.concat((train_data.iloc[:, 1:-1], test_data.iloc[:, 1:]))
+    # print(all_features.shape)
+    # print(all_features.iloc[0:4, [0, 1, 2, 3, -3, -2, -1]])
     pre_process(all_features)
