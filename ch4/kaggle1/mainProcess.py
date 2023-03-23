@@ -41,6 +41,11 @@ def pre_process(all_features):
 
     print("train label size: " + str(train_labels.shape))
 
+    return train_features,test_features,train_labels
+def get_net():
+    net = nn.Sequential(nn.Linear(in_features,1))
+    return net
+
 
 if __name__ == "__main__":
     print("Kaggle实战：房价预测——数据下载")
@@ -67,4 +72,11 @@ if __name__ == "__main__":
     all_features = pd.concat((train_data.iloc[:, 1:-1], test_data.iloc[:, 1:]))
     # print(all_features.shape)
     # print(all_features.iloc[0:4, [0, 1, 2, 3, -3, -2, -1]])
-    pre_process(all_features)
+
+
+    # 1. data preprocess
+    train_features, test_features, train_labels = pre_process(all_features)
+    # 2. train
+    # 2.1 define loss
+    loss = nn.MSELoss()
+    in_features = train_features.shape[1]
