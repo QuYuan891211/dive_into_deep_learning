@@ -5,7 +5,7 @@ import torch
 from torch import nn
 from d2l import torch as d2l
 from downloadData import download
-
+import os
 # 房价预测 https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 
 # 标准化的数据预处理步骤
@@ -32,27 +32,30 @@ def pre_process(all_features):
     # print(n_train)
     train_features = torch.tensor(all_features[:n_train].values, dtype=torch.float32)
     test_features = torch.tensor(all_features[n_train:].values, dtype=torch.float32)
-    print(train_features.shape)
-    print(test_features.shape)
+    print("train feature size: " + str(train_features.shape))
+    print("test feature size: " + str(test_features.shape))
 
     # 3.1 拿到最后一列作为标注
     train_labels = torch.tensor(
         train_data.SalePrice.values.reshape(-1, 1), dtype=torch.float32)
 
-    print(train_labels.shape)
+    print("train label size: " + str(train_labels.shape))
 
 
 if __name__ == "__main__":
     print("Kaggle实战：房价预测——数据下载")
-    # 1. 下载训练集与测试集，下载好之后就注释掉
+    # 1. 下载训练集与测试集
+    # 1.1 local dir for download
+    cache_dir = os.path.join('/opt/data', 'kaggle')
 
-    # train_data = pd.read_csv(download('kaggle_house_train'))
-    # test_data = pd.read_csv(download('kaggle_house_test'))
+    # TODO: startdownload,，下载好之后就注释掉
+    # train_data = pd.read_csv(download('kaggle_house_train', cache_dir))
+    # test_data = pd.read_csv(download('kaggle_house_test', cache_dir))
 
     # 数据前处理
     # 1. 下载好之后，读取数据集
-    train_data = pd.read_csv("D:\data\kaggle\kaggle_house_pred_train.csv")
-    test_data = pd.read_csv("D:\data\kaggle\kaggle_house_pred_test.csv")
+    train_data = pd.read_csv(os.path.join(cache_dir, 'kaggle_house_pred_train.csv'))
+    test_data = pd.read_csv(os.path.join(cache_dir, 'kaggle_house_pred_test.csv'))
     # print(type(train_data))
 
     # 1.1 打印训练集测试集的形状
