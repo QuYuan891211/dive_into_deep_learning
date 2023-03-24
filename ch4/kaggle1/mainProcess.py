@@ -6,6 +6,8 @@ from torch import nn
 from d2l import torch as d2l
 from downloadData import download
 import os
+
+
 # 房价预测 https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 
 # 标准化的数据预处理步骤
@@ -41,9 +43,11 @@ def pre_process(all_features):
 
     print("train label size: " + str(train_labels.shape))
 
-    return train_features,test_features,train_labels
+    return train_features, test_features, train_labels
+
+
 def get_net():
-    net = nn.Sequential(nn.Linear(in_features,1))
+    net = nn.Sequential(nn.Linear(in_features, 1))
     return net
 
 
@@ -72,7 +76,6 @@ if __name__ == "__main__":
     all_features = pd.concat((train_data.iloc[:, 1:-1], test_data.iloc[:, 1:]))
     # print(all_features.shape)
     # print(all_features.iloc[0:4, [0, 1, 2, 3, -3, -2, -1]])
-
 
     # 1. data preprocess
     train_features, test_features, train_labels = pre_process(all_features)
