@@ -6,7 +6,7 @@ from torch import nn
 from d2l import torch as d2l
 from downloadData import download
 import os
-
+from util.timer import Timer
 
 # 房价预测 https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 
@@ -51,7 +51,48 @@ def get_net():
     return net
 
 
+def log_rmse(net, features, labels):
+    # 为了在取对数时进一步稳定该值,将小于1的值设置为1
+    clipped_preds = torch.clamp(net(features), 1, float('inf'))
+    rmse = torch.sqrt(loss(torch.log(clipped_preds),
+                           torch.log(labels)))
+    return rmse.item()
+
+
+def train(net, train_features, train_labels, test_features, test_labels,
+          num_epochs, learning_rate, weight_decay, batch_size):
+    train_ls, test_ls = [], []
+    # 1. create iter
+    train_iter = d2l.load_array((train_features, train_labels), batch_size)
+    print("iter_size: " + train_iter.shape)
+    # create optimizer 这里使用的是Adam优化算法
+    optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    num_epoch = 0
+    for epoch in range(num_epochs):
+        num_epoch += 1
+        num_batch = 0
+        for X, y in train_iter:
+            num_batch += 1
+            # 清空过往梯度
+            optimizer.zero_grad()
+            # get the loss from one train
+            l = loss(net(X), y)
+            print(l)
+            l.backward()
+            optimizer.step()
+        train_ls.append(log_rmse(net, train_features, train_labels))
+        if test_labels is not None:
+            test_ls.append(log_rmse(net, test_features, test_labels))
+        # 算每个迭代周期后的损失,并打印它来监控训练过程
+        print(f'epoch {epoch + 1}, loss {l:f}')
+    print(f'num_batch: {num_batch}')
+    print(f'num_epoch: {num_epoch}')
+    return train_ls, test_ls
+
+
 if __name__ == "__main__":
+    timer = Timer()
+    # timer.start()
     print("Kaggle实战：房价预测——数据下载")
     # 1. 下载训练集与测试集
     # 1.1 local dir for download
@@ -82,4 +123,9 @@ if __name__ == "__main__":
     # 2. train
     # 2.1 define loss
     loss = nn.MSELoss()
+    # get size of second dimension
     in_features = train_features.shape[1]
+    # print(in_features)
+    print("in_feature: " + str(in_features))
+
+    print(f'{timer.stop():.5f} sec')
