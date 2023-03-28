@@ -58,7 +58,7 @@ def log_rmse(net, features, labels):
                            torch.log(labels)))
     return rmse.item()
 
-
+#
 def train(net, train_features, train_labels, test_features, test_labels,
           num_epochs, learning_rate, weight_decay, batch_size):
     train_ls, test_ls = [], []
@@ -68,17 +68,27 @@ def train(net, train_features, train_labels, test_features, test_labels,
     # create optimizer 这里使用的是Adam优化算法
     optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate, weight_decay=weight_decay)
     num_epoch = 0
+
+    # 2. 在每个迭代周期(epoch)里,我们将完整遍历一次数据集(train_data),
     for epoch in range(num_epochs):
         num_epoch += 1
         num_batch = 0
+        print(f'epoch No. {num_batch} ')
+        # 3. 不停地从中获取一个小批量(batch)的输入和相应的标签。
         for X, y in train_iter:
             num_batch += 1
-            # 清空过往梯度
+            print(f'batch No. {num_batch} ')
+            print(f'X shape: {X.shape}')
+            print(f'y shape: {y.shape}')
+
+            # 3.1 清空过往梯度
             optimizer.zero_grad()
-            # get the loss from one train
+            # 3.2 通过调用net(X)生成预测并计算损失l(前向传播)
             l = loss(net(X), y)
             print(l)
+            # 3.3 通过进行反向传播来计算梯度
             l.backward()
+            # 3.4 通过调用优化器来更新模型参数
             optimizer.step()
         train_ls.append(log_rmse(net, train_features, train_labels))
         if test_labels is not None:
