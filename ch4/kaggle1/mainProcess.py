@@ -105,8 +105,10 @@ if __name__ == "__main__":
     # timer.start()
     print("Kaggle实战：房价预测——数据下载")
     # 1. 下载训练集与测试集
-    # 1.1 local dir for download
-    cache_dir = os.path.join('/opt/data', 'kaggle')
+    # 1.1 TODO: local dir for download 选择不同的电脑下载路径
+    # cache_dir = os.path.join('/opt/data', 'kaggle')
+    # MBP path
+    cache_dir = os.path.join('/Users/quyuan/Desktop/Data', 'kaggle')
 
     # TODO: startdownload,，下载好之后就注释掉
     # train_data = pd.read_csv(download('kaggle_house_train', cache_dir))
