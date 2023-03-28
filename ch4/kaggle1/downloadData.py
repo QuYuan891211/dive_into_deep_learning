@@ -4,10 +4,17 @@ import tarfile
 import zipfile
 import requests
 
-
-def download(name, cache_dir=os.path.join('D:\data', 'kaggle')):  # @save
+DATA_HUB = dict()
+DATA_URL = 'http://d2l-data.s3-accelerate.amazonaws.com/'
+DATA_HUB['kaggle_house_train'] = (  # @save
+    DATA_URL + 'kaggle_house_pred_train.csv',
+    '585e9cc93e70b39160e7921475f9bcd7d31219ce')
+DATA_HUB['kaggle_house_test'] = (  # @save
+    DATA_URL + 'kaggle_house_pred_test.csv',
+    'fa19780a7b011d9b009e8bff8e99922a8ee2eb90')
+def download(name, cache_dir):  # @save
     # 下载一个DATA_HUB中的文件，返回本地文件名
-    assert name in DATA_HUB[name], f"{name} 不存在于 {DATA_HUB}"
+    # assert name in DATA_HUB[name], f"{name} 不存在于 {DATA_HUB}"
     url, sha1_hash = DATA_HUB[name]
     # 创建本地缓存路径(如果已存在就不再创建)
     os.makedirs(cache_dir, exist_ok=True)
