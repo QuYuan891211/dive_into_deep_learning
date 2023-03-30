@@ -117,15 +117,32 @@ def k_fold(k, X_train, y_train, num_epochs, learning_rate, weight_decay,
               f'验证log rmse{float(valid_ls[-1]):f}')
     return train_l_sum / k, valid_l_sum / k
 
+#
+def train_and_pred(train_features, test_features, train_labels, test_data,
+                    num_epochs, lr, weight_decay, batch_size):
+    net = get_net()
+    train_ls, _ = train(net, train_features, train_labels, None, None,
+                        num_epochs, lr, weight_decay, batch_size)
+    d2l.plot(np.arange(1, num_epochs + 1), [train_ls], xlabel='epoch',
+             ylabel='log rmse', xlim=[1, num_epochs], yscale='log')
+    print(f'训练log rmse:{float(train_ls[-1]):f}')
+    # 将网络应用于测试集。
+    preds = net(test_features).detach().numpy()
+    # 将其重新格式化以导出到Kaggle
+    test_data['SalePrice'] = pd.Series(preds.reshape(1, -1)[0])
+    submission = pd.concat([test_data['Id'], test_data['SalePrice']], axis=1)
+    model_dir = os.path.join(cache_dir, 'submission.csv')
+    submission.to_csv(model_dir, index=False)
+
 if __name__ == "__main__":
     timer = Timer()
     # timer.start()
     print("Kaggle实战：房价预测——数据下载")
     # 1. 下载训练集与测试集
     # 1.1 TODO: local dir for download 选择不同的电脑下载路径
-    # cache_dir = os.path.join('/opt/data', 'kaggle')
+    cache_dir = os.path.join('/opt/data', 'kaggle')
     # MBP path
-    cache_dir = os.path.join('/Users/quyuan/Desktop/Data', 'kaggle')
+    # cache_dir = os.path.join('/Users/quyuan/Desktop/Data', 'kaggle')
 
     # TODO: startdownload,，下载好之后就注释掉
     # train_data = pd.read_csv(download('kaggle_house_train', cache_dir))
@@ -156,9 +173,12 @@ if __name__ == "__main__":
     in_features = train_features.shape[1]
     # print(in_features)
     print("in_feature: " + str(in_features))
-    k, num_epochs, lr, weight_decay, batch_size = 10, 100, 5, 0, 64
-    train_l, valid_l = k_fold(k, train_features, train_labels, num_epochs, lr,
-                              weight_decay, batch_size)
-    print(f'{k}-折验证: 平均训练log rmse: {float(train_l):f}, '
-          f'平均验证log rmse: {float(valid_l):f}')
+    k, num_epochs, lr, weight_decay, batch_size = 5, 100, 5, 0, 64
+    # train_l, valid_l = k_fold(k, train_features, train_labels, num_epochs, lr,
+    #                           weight_decay, batch_size)
+    # print(f'{k}-折验证: 平均训练log rmse: {float(train_l):f}, '
+    #       f'平均验证log rmse: {float(valid_l):f}')
+
+    train_and_pred(train_features, test_features, train_labels, test_data,
+                   num_epochs, lr, weight_decay, batch_size)
     print(f'{timer.stop():.5f} sec')
