@@ -139,5 +139,5 @@ def main():
 if __name__ == "__main__":
     main()
     book_ch2_1()
-    #book_ch2_2()
-    #book_ch2_3()
+    book_ch2_2()
+    book_ch2_3()

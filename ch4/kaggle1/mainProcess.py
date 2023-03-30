@@ -7,9 +7,7 @@ from d2l import torch as d2l
 from downloadData import download
 import os
 from util.timer import Timer
-import util.validate as validate
-
-
+import util.validate_macos as validate
 # 房价预测 https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 
 # 标准化的数据预处理步骤
@@ -60,7 +58,6 @@ def log_rmse(net, features, labels):
                            torch.log(labels)))
     return rmse.item()
 
-
 #
 def train(net, train_features, train_labels, test_features, test_labels,
           num_epochs, learning_rate, weight_decay, batch_size):
@@ -102,8 +99,6 @@ def train(net, train_features, train_labels, test_features, test_labels,
     print(f'num_epoch: {num_epoch}')
     return train_ls, test_ls
 
-
-#
 def k_fold(k, X_train, y_train, num_epochs, learning_rate, weight_decay,
            batch_size):
     train_l_sum, valid_l_sum = 0, 0
@@ -118,18 +113,19 @@ def k_fold(k, X_train, y_train, num_epochs, learning_rate, weight_decay,
             d2l.plot(list(range(1, num_epochs + 1)), [train_ls, valid_ls],
                      xlabel='epoch', ylabel='rmse', xlim=[1, num_epochs],
                      legend=['train', 'valid'], yscale='log')
-        print(f'折{i + 1},训练log rmse{float(train_ls[-1]):f}, '
+        print(f'折{i + 1}，训练log rmse{float(train_ls[-1]):f}, '
               f'验证log rmse{float(valid_ls[-1]):f}')
     return train_l_sum / k, valid_l_sum / k
-
 
 if __name__ == "__main__":
     timer = Timer()
     # timer.start()
     print("Kaggle实战：房价预测——数据下载")
     # 1. 下载训练集与测试集
-    # 1.1 local dir for download
-    cache_dir = os.path.join('/opt/data', 'kaggle')
+    # 1.1 TODO: local dir for download 选择不同的电脑下载路径
+    # cache_dir = os.path.join('/opt/data', 'kaggle')
+    # MBP path
+    cache_dir = os.path.join('/Users/quyuan/Desktop/Data', 'kaggle')
 
     # TODO: startdownload,，下载好之后就注释掉
     # train_data = pd.read_csv(download('kaggle_house_train', cache_dir))
@@ -160,12 +156,9 @@ if __name__ == "__main__":
     in_features = train_features.shape[1]
     # print(in_features)
     print("in_feature: " + str(in_features))
-
-    # super var
-    k, num_epochs, lr, weight_decay, batch_size = 20, 100, 5, 0, 64
+    k, num_epochs, lr, weight_decay, batch_size = 10, 100, 5, 0, 64
     train_l, valid_l = k_fold(k, train_features, train_labels, num_epochs, lr,
                               weight_decay, batch_size)
     print(f'{k}-折验证: 平均训练log rmse: {float(train_l):f}, '
           f'平均验证log rmse: {float(valid_l):f}')
-
     print(f'{timer.stop():.5f} sec')
