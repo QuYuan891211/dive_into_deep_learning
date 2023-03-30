@@ -7,6 +7,8 @@ from d2l import torch as d2l
 from downloadData import download
 import os
 from util.timer import Timer
+import util.validate as validate
+
 
 # 房价预测 https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 
@@ -58,13 +60,14 @@ def log_rmse(net, features, labels):
                            torch.log(labels)))
     return rmse.item()
 
+
 #
 def train(net, train_features, train_labels, test_features, test_labels,
           num_epochs, learning_rate, weight_decay, batch_size):
     train_ls, test_ls = [], []
     # 1. create iter
     train_iter = d2l.load_array((train_features, train_labels), batch_size)
-    print("iter_size: " + train_iter.shape)
+    # print("iter_size: " + train_iter.shape)
     # create optimizer 这里使用的是Adam优化算法
     optimizer = torch.optim.Adam(net.parameters(), lr=learning_rate, weight_decay=weight_decay)
     num_epoch = 0
@@ -73,13 +76,13 @@ def train(net, train_features, train_labels, test_features, test_labels,
     for epoch in range(num_epochs):
         num_epoch += 1
         num_batch = 0
-        print(f'epoch No. {num_batch} ')
+        print(f'epoch No. {num_epoch} ')
         # 3. 不停地从中获取一个小批量(batch)的输入和相应的标签。
         for X, y in train_iter:
             num_batch += 1
             print(f'batch No. {num_batch} ')
-            print(f'X shape: {X.shape}')
-            print(f'y shape: {y.shape}')
+            # print(f'X shape: {X.shape}')
+            # print(f'y shape: {y.shape}')
 
             # 3.1 清空过往梯度
             optimizer.zero_grad()
@@ -98,6 +101,26 @@ def train(net, train_features, train_labels, test_features, test_labels,
     print(f'num_batch: {num_batch}')
     print(f'num_epoch: {num_epoch}')
     return train_ls, test_ls
+
+
+#
+def k_fold(k, X_train, y_train, num_epochs, learning_rate, weight_decay,
+           batch_size):
+    train_l_sum, valid_l_sum = 0, 0
+    for i in range(k):
+        data = validate.get_k_fold_data(k, i, X_train, y_train)
+        net = get_net()
+        train_ls, valid_ls = train(net, *data, num_epochs, learning_rate,
+                                   weight_decay, batch_size)
+        train_l_sum += train_ls[-1]
+        valid_l_sum += valid_ls[-1]
+        if i == 0:
+            d2l.plot(list(range(1, num_epochs + 1)), [train_ls, valid_ls],
+                     xlabel='epoch', ylabel='rmse', xlim=[1, num_epochs],
+                     legend=['train', 'valid'], yscale='log')
+        print(f'折{i + 1},训练log rmse{float(train_ls[-1]):f}, '
+              f'验证log rmse{float(valid_ls[-1]):f}')
+    return train_l_sum / k, valid_l_sum / k
 
 
 if __name__ == "__main__":
@@ -137,5 +160,12 @@ if __name__ == "__main__":
     in_features = train_features.shape[1]
     # print(in_features)
     print("in_feature: " + str(in_features))
+
+    # super var
+    k, num_epochs, lr, weight_decay, batch_size = 20, 100, 5, 0, 64
+    train_l, valid_l = k_fold(k, train_features, train_labels, num_epochs, lr,
+                              weight_decay, batch_size)
+    print(f'{k}-折验证: 平均训练log rmse: {float(train_l):f}, '
+          f'平均验证log rmse: {float(valid_l):f}')
 
     print(f'{timer.stop():.5f} sec')
