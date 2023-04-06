@@ -33,6 +33,19 @@ def main():
     print(net[0].weight.data[0])
     print(net[2].weight.data)
 
+
+    #share layer
+    shared = nn.Linear(8, 8)
+    net = nn.Sequential(nn.Linear(4, 8), nn.ReLU(),
+                        shared, nn.ReLU(),
+                        shared, nn.ReLU(),
+                        nn.Linear(8, 1))
+    net(X)
+    # 检查参数是否相同
+    print(net[2].weight.data[0] == net[4].weight.data[0])
+    net[2].weight.data[0, 0] = 100
+    # 确保它们实际上是同一个对象,而不只是有相同的值
+    print(net[2].weight.data[0] == net[4].weight.data[0])
 def init_xavier(m):
     if type(m) == nn.Linear:
         nn.init.xavier_uniform_(m.weight)
