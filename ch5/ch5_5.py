@@ -4,15 +4,15 @@ from d2l import torch as d2l
 from torch.nn import functional as F
 from util.timer import Timer
 
-def main():
 
+def main():
     print('ch5_5')
     x = torch.arange(4)
     torch.save(x, 'x-file')
     x2 = torch.load('x-file')
     print(x2)
     y = torch.zeros(4)
-    torch.save([x, y],'x-files')
+    torch.save([x, y], 'x-files')
     x2, y2 = torch.load('x-files')
     print(x2, y2)
     mydict = {'x': x, 'y': y}
@@ -30,6 +30,8 @@ def main():
 
     Y_clone = clone(X)
     print(Y_clone == Y)
+
+
 class MLP(nn.Module):
     def __init__(self):
         super().__init__()
@@ -38,6 +40,7 @@ class MLP(nn.Module):
 
     def forward(self, X):
         return self.output(F.relu(self.hidden(X)))
+
 
 if __name__ == "__main__":
     timer = Timer()
