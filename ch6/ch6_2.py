@@ -62,6 +62,7 @@ def main():
     lr = 3e-2  # 学习率
     print(X)
     print(Y)
+
     for i in range(10):
         Y_hat = net(X)
         loss = (Y - Y_hat)**2
@@ -73,6 +74,7 @@ def main():
             print(f'epoch {i + 1}, loss {loss.sum():.3f}')
 
     kernel = net.weight.data.reshape((1, 2))
+    print(f'device is {kernel.device}')
     print(f'kernel is {kernel}')
     print(f'GPU time is {timer_gpu.stop():.5f} sec')
 

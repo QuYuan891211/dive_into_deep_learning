@@ -3,7 +3,7 @@ from d2l import torch as d2l
 from torch import nn
 from util.timer import Timer
 # from ch6_2 import corr2d
-from util import gpu
+# from util import gpu
 
 
 def main():
