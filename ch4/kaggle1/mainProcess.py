@@ -1,4 +1,8 @@
 from matplotlib import pyplot as plt
+import sys
+
+sys.path.append('/home/caijz/temp/test_d2l/temp_d2l_pytorch')
+
 import numpy as np
 import pandas as pd
 import torch
@@ -8,6 +12,8 @@ from downloadData import download
 import os
 from util.timer import Timer
 import util.validate_macos as validate
+
+
 # 房价预测 https://www.kaggle.com/c/house-prices-advanced-regression-techniques
 
 # 标准化的数据预处理步骤
@@ -58,6 +64,7 @@ def log_rmse(net, features, labels):
                            torch.log(labels)))
     return rmse.item()
 
+
 #
 def train(net, train_features, train_labels, test_features, test_labels,
           num_epochs, learning_rate, weight_decay, batch_size):
@@ -99,6 +106,7 @@ def train(net, train_features, train_labels, test_features, test_labels,
     print(f'num_epoch: {num_epoch}')
     return train_ls, test_ls
 
+
 def k_fold(k, X_train, y_train, num_epochs, learning_rate, weight_decay,
            batch_size):
     train_l_sum, valid_l_sum = 0, 0
@@ -117,9 +125,10 @@ def k_fold(k, X_train, y_train, num_epochs, learning_rate, weight_decay,
               f'验证log rmse{float(valid_ls[-1]):f}')
     return train_l_sum / k, valid_l_sum / k
 
+
 #
 def train_and_pred(train_features, test_features, train_labels, test_data,
-                    num_epochs, lr, weight_decay, batch_size):
+                   num_epochs, lr, weight_decay, batch_size):
     net = get_net()
     train_ls, _ = train(net, train_features, train_labels, None, None,
                         num_epochs, lr, weight_decay, batch_size)
@@ -134,13 +143,14 @@ def train_and_pred(train_features, test_features, train_labels, test_data,
     model_dir = os.path.join(cache_dir, 'submission.csv')
     submission.to_csv(model_dir, index=False)
 
+
 if __name__ == "__main__":
     timer = Timer()
     # timer.start()
     print("Kaggle实战：房价预测——数据下载")
     # 1. 下载训练集与测试集
     # 1.1 TODO: local dir for download 选择不同的电脑下载路径
-    cache_dir = os.path.join('/opt/data', 'kaggle')
+    cache_dir = os.path.join('../../data', 'Kaggle_housePrice')
     # MBP path
     # cache_dir = os.path.join('/Users/quyuan/Desktop/Data', 'kaggle')
 

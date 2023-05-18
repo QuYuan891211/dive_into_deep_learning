@@ -1,3 +1,7 @@
+import sys
+
+sys.path.append('/home/caijz/temp/test_d2l/temp_d2l_pytorch')
+
 import torch
 from d2l import torch as d2l
 from torch import nn
