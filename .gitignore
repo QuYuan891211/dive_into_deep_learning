@@ -1,3 +1,6 @@
 /data/
 
 /logs/
+/ch6/test.py
+/.idea/workspace.xml
+/.idea/temp_d2l_pytorch.iml
