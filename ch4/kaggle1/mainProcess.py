@@ -136,11 +136,36 @@ def train_and_pred(train_features, test_features, train_labels, test_data,
              ylabel='log rmse', xlim=[1, num_epochs], yscale='log')
     print(f'训练log rmse:{float(train_ls[-1]):f}')
     # 将网络应用于测试集。
+    # preds1 = net(test_features)
     preds = net(test_features).detach().numpy()
+
+
+    # 保存模型
+    model_path = os.path.join(cache_dir, 'house_price_model.pth')
+    #1. 测试jit方式保存
+    trace_model = torch.jit.trace(net, test_features)
+
+    trace_model.save(model_path)
+
+    #2. 测试save保存
+    # torch.save(net, model_path)
+
+    #3. 测试
+    # model_read = torch.load(model_path)
+    # print(model_read)
+
+
+    # print(model.load_state_dict(weights))
+    # print(model_path)
+    # print(preds1)
+    # print(preds1.shape)
+    # print(preds)
+    # print(preds.shape)
     # 将其重新格式化以导出到Kaggle
     test_data['SalePrice'] = pd.Series(preds.reshape(1, -1)[0])
     submission = pd.concat([test_data['Id'], test_data['SalePrice']], axis=1)
     model_dir = os.path.join(cache_dir, 'submission.csv')
+    print(model_dir)
     submission.to_csv(model_dir, index=False)
 
 

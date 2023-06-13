@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('/home/caijz/temp/test_d2l/temp_d2l_pytorch')
-
+import os
 import torch
 from d2l import torch as d2l
 from torch import nn
@@ -38,8 +38,15 @@ def main():
     writer.add_graph(model=net, input_to_model=X)
     batch_size = 256
     train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size=batch_size)
-    lr, num_epochs = 0.1, 1
+    lr, num_epochs = 0.1, 3
     train_ch6(net, train_iter, test_iter, num_epochs, lr, d2l.try_gpu())
+    # 保存模型
+    cache_dir = os.path.join('../../data', 'LeNet')
+    model_path = os.path.join(cache_dir, 'house_price_model.pth')
+    #1. 测试jit方式保存
+    trace_model = torch.jit.trace(net, test_iter)
+
+    trace_model.save(model_path)
     plt.show()
     writer.close()
 
