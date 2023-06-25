@@ -8,7 +8,7 @@ from torch import nn
 from torch import nn
 from util.timer import Timer
 import matplotlib.pyplot as plt
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
           'machines）性能相媲美的成果，成为监督学习的主流方法, LeNet被广泛用于自动取款机（ATM）机中，帮助识别处理支票的数字。 时至今日，一些自动取款机仍在运行Yann LeCun和他的同事Leon '
           'Bottou在上世纪90年代写的代码呢！')
     # 创建编辑器，保存日志，指令保存路径log_dir
-    writer = SummaryWriter(log_dir="../logs")  # 指定保存位置
+    # writer = SummaryWriter(log_dir="../logs")  # 指定保存位置
     net = nn.Sequential(
         # 卷积块1
         nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, padding=2), nn.ReLU(),
@@ -35,7 +35,7 @@ def main():
     # for layer in net:
     #     X = layer(X)
     #     print(layer.__class__.__name__, 'output shape: \t', X.shape)
-    writer.add_graph(model=net, input_to_model=X)
+    # writer.add_graph(model=net, input_to_model=X)
     batch_size = 256
     train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size=batch_size)
     lr, num_epochs = 0.1, 3
@@ -48,7 +48,7 @@ def main():
 
     trace_model.save(model_path)
     plt.show()
-    writer.close()
+    # writer.close()
 
 
 def evaluate_accuracy_gpu(net, data_iter, device=None):  # @save
